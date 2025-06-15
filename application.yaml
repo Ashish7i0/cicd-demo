@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-app
+  namespace: argocd  # Namespace where Argo CD is installed
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ashish710/demo-argocd.git
+    targetRevision: main  # Branch name
+    path: k8s-manifest     # Path to the directory containing Kubernetes manifests
+  destination:
+    server: https://kubernetes.default.svc  # In-cluster Kubernetes API
+    namespace: demo
+  syncPolicy:
+    automated:
+      prune: true        # Remove resources not defined in the repo
+      selfHeal: true     # Automatically fix out-of-sync resources
+    syncOptions:
+    - CreateNamespace=true  # Automatically create namespace if it doesn't exist
